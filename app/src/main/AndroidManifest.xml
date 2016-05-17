@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="snru.joonsri.peerawit.gamerun">
 
+    //ทำให้Genymotionเล่นเน็ตได้
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application

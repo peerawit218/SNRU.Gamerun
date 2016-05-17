@@ -9,13 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class MyOpenHelper extends SQLiteOpenHelper {
 
-    //Explicit
+    //Explicit //สร้างตาราง
     public static final String database_name = "Snru.db";
     private static final int database_version = 1;
 
     private static final String create_user_table = "create table userTABLE ("+
             "_id integer primary key, " +
-            " Name text," +
+            "Name text," +
             "User text," +
             "Password text," +
             "Avata text);";
