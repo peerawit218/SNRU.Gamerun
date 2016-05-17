@@ -16,7 +16,7 @@ public class MyAlert {
         builder.setIcon(R.drawable.doremon48);
         builder.setTitle(strTitle);
         builder.setMessage(strMessage);
-        builder.setPositiveButton("OK NA", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
