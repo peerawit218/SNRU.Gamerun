@@ -7,13 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="snru.joonsri.peerawit.gamerun.MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="รักเธอจัง"
-        android:id="@+id/textView" />
+    tools:context="snru.joonsri.peerawit.gamerun.MainActivity"
+    android:background="@drawable/runcar">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -39,6 +34,39 @@
             android:text="sign in"
             android:id="@+id/button2"
             android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:padding="30dp"
+        android:gravity="center_horizontal"
+        android:background="#82ffffff">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView6" />
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText4"
+            android:hint="User"
+            android:inputType="text"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText5"
+            android:hint="Password"
+            android:inputType="textPassword|text"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
     </LinearLayout>
 
 </RelativeLayout>
