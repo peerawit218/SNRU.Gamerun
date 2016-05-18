@@ -8,7 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="snru.joonsri.peerawit.gamerun.MainActivity"
-    android:background="@drawable/ss">
+    android:background="@drawable/ss"
+    android:alpha="0.5">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -26,7 +27,10 @@
             android:text="sign up"
             android:id="@+id/button"
             android:layout_weight="1"
-            android:onClick="clickSignUpMain" />
+            android:onClick="clickSignUpMain"
+            android:textColor="#000000"
+            android:textSize="15dp"
+            android:background="@android:color/transparent" />
 
         <Button
             android:layout_width="wrap_content"
@@ -34,7 +38,10 @@
             android:text="sign in"
             android:id="@+id/btntest"
             android:layout_weight="1"
-            android:onClick="clickSignIn" />
+            android:onClick="clickSignIn"
+            android:textColor="#000000"
+            android:textSize="15dp"
+            android:background="@android:color/transparent" />
     </LinearLayout>
 
     <LinearLayout
@@ -58,7 +65,8 @@
             android:hint="User"
             android:inputType="text"
             android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+            android:textColorHint="#ffffff"
+            android:textSize="30dp" />
 
         <EditText
             android:layout_width="250dp"
@@ -67,7 +75,8 @@
             android:hint="Password"
             android:inputType="textPassword|text"
             android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+            android:textColorHint="#ffffff"
+            android:textSize="30dp" />
     </LinearLayout>
 
 </RelativeLayout>
