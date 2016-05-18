@@ -100,8 +100,13 @@ public class MainActivity extends AppCompatActivity {
             //Check Password
             if (passwordString.equals(userStrings[3])) {
 
-                Toast.makeText(this, "ยินดีต้อนรับ" + userStrings[1], Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "ยินดีต้อนรับ" + userStrings[1], Toast.LENGTH_SHORT).show(); //โชว์massageตอนกดSignIn
 
+                //กดปุ่มSignInแล้วไปหน้าMap
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);//จากหน้าMainไปหน้าMap
+                intent.putExtra("User", userStrings);
+                startActivity(intent);
+                finish();
 
             } else {
 
