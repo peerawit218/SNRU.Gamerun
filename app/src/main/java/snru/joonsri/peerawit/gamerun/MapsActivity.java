@@ -4,26 +4,24 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.nearby.sharing.LocalContent;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    //Explicit
     private GoogleMap mMap;
-    private double snruLatDouble = 17.190512,
-            snruLanADouble = 104.090424;
-    private LocationManager locationManage;
+    private double snruLatADouble = 17.189813,
+            snruLngADouble = 104.087387;
+    private LocationManager locationManager;
     private Criteria criteria;
     private double myLatADouble, myLngADouble;
     private boolean gpsABoolean, networkABoolean;
@@ -31,79 +29,75 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.my_design);//เปิดไปหน้าที่ต้องการ
+        setContentView(R.layout.my_design);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         //Setup Location
-        locationManage = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         criteria.setAltitudeRequired(false);
         criteria.setBearingRequired(false);
 
-
-
-    } //Main Method
-
+    }   // Main Method
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        locationManage.removeUpdates( locationListener);
-        myLatADouble = snruLanADouble;
-        myLatADouble = snruLatDouble;
+        // locationManager.removeUpdates((android.location.LocationListener) locationListener);
+        myLatADouble = snruLatADouble;
+        myLngADouble = snruLngADouble;
 
-        Location networdLocation = myFindLocation(LocationManager.NETWORK_PROVIDER, "ไม่ได้ต่อเน็ต");
-        if (networdLocation != null) {
-            myLatADouble = networdLocation.getLatitude();
-            myLatADouble = networdLocation.getLongitude();
+        Location networkLocation = myFindLocation(LocationManager.NETWORK_PROVIDER, "ไม่ได้ต่อเน็ต");
+        if (networkLocation != null) {
+            myLatADouble = networkLocation.getLatitude();
+            myLngADouble = networkLocation.getLongitude();
         }
 
         Location gpsLocation = myFindLocation(LocationManager.GPS_PROVIDER, "ไม่มี GPS");
         if (gpsLocation != null) {
             myLatADouble = gpsLocation.getLatitude();
-            myLatADouble = gpsLocation.getLongitude();
+            myLngADouble = gpsLocation.getLongitude();
         }
+
 
     }
 
     @Override
     protected void onStop() {
-        super.onStop(); //ปิดเซอร์วิส
+        super.onStop();
 
-        locationManage.removeUpdates(locationListener);
+        locationManager.removeUpdates(locationListener);
 
     }
 
     public Location myFindLocation(String strProvider, String strError) {
 
         Location location = null;
-        if (locationManage.isProviderEnabled(strProvider)) {
 
-            locationManage.requestLocationUpdates(strProvider, 1000, 10, locationListener);
-            location = locationManage.getLastKnownLocation(strProvider);
+        if (locationManager.isProviderEnabled(strProvider)) {
 
-
+            locationManager.requestLocationUpdates(strProvider, 1000, 10, locationListener);
+            location = locationManager.getLastKnownLocation(strProvider);
 
         } else {
-
-            Log.d("test", "my Error == " + strError);
-
+            Log.d("test", "my Error ==> " + strError);
         }
-        return null;
+
+        return location;
     }
 
 
-    //Create Inner Class //คลาสซ้อนคลาส
+    //Create Inner Class
     public android.location.LocationListener locationListener = new android.location.LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             myLatADouble = location.getLatitude();
-            myLatADouble = location.getLongitude();
+            myLngADouble = location.getLongitude();
         }
 
         @Override
@@ -129,30 +123,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         //Setup for สกล
-        LatLng snruLatlng = new LatLng(snruLatDouble, snruLanADouble);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(snruLatlng, 15));
+        LatLng snruLatLng = new LatLng(snruLatADouble, snruLngADouble);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(snruLatLng, 15));
 
-        //My loop
+        //My Loop
         myLoop();
 
-    } //onMapReady
+    }   // onMapReady
 
     private void myLoop() {
 
-        Log.d("18May16", "MyLat = " + myLatADouble);
-        Log.d("18May16", "MyLon = " + myLngADouble);
+        Log.d("18May16", "myLat = " + myLatADouble);
+        Log.d("18May16", "myLng = " + myLngADouble);
+
+
+
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
-
+                myLoop();
             }
-        }, 3000//วนทุก 3 วินาที
-                );
+        }, 3000);
 
-    } //My Loop
-} //Main Class
+    }   // myLoop
+
+}   // Main Class
 
