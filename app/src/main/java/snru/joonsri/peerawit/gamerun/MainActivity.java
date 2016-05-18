@@ -1,6 +1,7 @@
 package snru.joonsri.peerawit.gamerun;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private MyManage myManage;
     private ImageView imageView;
     private EditText userEditText, passwordEditText;
+    private String userString, passwordString;
+    private String[] userStrings;
 
 
 
@@ -55,6 +60,64 @@ public class MainActivity extends AppCompatActivity {
 
 
     }//Main Method
+
+    public void clickSignIn(View view) {
+
+        Log.d("test", "click");
+
+        userString = userEditText.getText().toString().trim();
+        passwordString = passwordEditText.getText().toString().trim();
+
+        //Check Space
+        if (userString.equals("") || passwordString.equals("")) {
+
+          /*  Toast.makeText(MainActivity.this, "Error กรุณากรอก user pass", Toast.LENGTH_SHORT).show();*/
+            MyAlert myAlert = new MyAlert();
+            myAlert.myDialog(this, "มีช่องว่าง", "กรุณากรอกให้ครบ");
+
+        } else {
+
+            checkUser();
+
+        }
+
+    }
+
+    private void checkUser() {
+
+        try {
+
+            SQLiteDatabase sqLiteDatabase = openOrCreateDatabase(MyOpenHelper.database_name,
+                    MODE_PRIVATE, null);
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM userTABLE WHERE User = " + "'" + userString + "'", null);
+            cursor.moveToFirst();
+            userStrings = new String[cursor.getColumnCount()];
+
+            for (int i = 0;i < cursor.getColumnCount(); i++) {
+                userStrings[i] = cursor.getString(i);
+            }
+
+            //Check Password
+            if (passwordString.equals(userStrings[3])) {
+
+                Toast.makeText(this, "ยินดีต้อนรับ" + userStrings[1], Toast.LENGTH_SHORT).show();
+
+
+            } else {
+
+                MyAlert myAlert = new MyAlert();
+                myAlert.myDialog(this,"Password False", "Please Try Again Password False");
+
+            }
+
+
+
+        } catch (Exception e) {
+            MyAlert myAlert = new MyAlert();
+            myAlert.myDialog(this, "ไม่มี User นี้", "ไม่มี " + userString + " ในฐานข้อมูลของดรา");
+        }
+
+    } //checkUser
 
     //Create Inner Class
     public class MySynchronize extends AsyncTask<Void, Void, String> {
