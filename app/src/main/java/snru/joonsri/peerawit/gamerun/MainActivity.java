@@ -61,6 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
     }//Main Method
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        deleteAllSQLite();
+        MySynchronize mySynchronize = new MySynchronize();
+        mySynchronize.execute();
+    }
+
     public void clickSignIn(View view) {
 
         Log.d("test", "click");
