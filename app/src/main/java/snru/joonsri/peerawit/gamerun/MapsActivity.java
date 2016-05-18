@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,12 +48,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     } //Main Method
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        locationManage.removeUpdates( locationListener);
+        myLatADouble = snruLanADouble;
+        myLatADouble = snruLatDouble;
+
+        Location networdLocation = myFindLocation(LocationManager.NETWORK_PROVIDER, "ไม่ได้ต่อเน็ต");
+        if (networdLocation != null) {
+            myLatADouble = networdLocation.getLatitude();
+            myLatADouble = networdLocation.getLongitude();
+        }
+
+        Location gpsLocation = myFindLocation(LocationManager.GPS_PROVIDER, "ไม่มี GPS");
+        if (gpsLocation != null) {
+            myLatADouble = gpsLocation.getLatitude();
+            myLatADouble = gpsLocation.getLongitude();
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop(); //ปิดเซอร์วิส
+
+        locationManage.removeUpdates(locationListener);
+
+    }
+
     public Location myFindLocation(String strProvider, String strError) {
 
         Location location = null;
         if (locationManage.isProviderEnabled(strProvider)) {
 
-            locationManage.requestLocationUpdates(strProvider, 1000, 10, (android.location.LocationListener) locationListener);
+            locationManage.requestLocationUpdates(strProvider, 1000, 10, locationListener);
             location = locationManage.getLastKnownLocation(strProvider);
 
 
@@ -66,18 +98,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     //Create Inner Class //คลาสซ้อนคลาส
-    public LocationListener locationListener = new LocationListener() {
+    public android.location.LocationListener locationListener = new android.location.LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-
-            //การค้นหา เมื่อมีการเปลี่ยนค่า
             myLatADouble = location.getLatitude();
             myLatADouble = location.getLongitude();
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
 
         }
-    }; //Location
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
 
 
 
@@ -87,8 +130,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Setup for สกล
         LatLng snruLatlng = new LatLng(snruLatDouble, snruLanADouble);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(snruLatlng, 16));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(snruLatlng, 15));
 
-    }
+        //My loop
+        myLoop();
+
+    } //onMapReady
+
+    private void myLoop() {
+
+        Log.d("18May16", "MyLat = " + myLatADouble);
+        Log.d("18May16", "MyLon = " + myLngADouble);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+
+
+            }
+        }, 3000//วนทุก 3 วินาที
+                );
+
+    } //My Loop
 } //Main Class
 

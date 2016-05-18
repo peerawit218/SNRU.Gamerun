@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:onClick="clickSignUpMain"
             android:textColor="#000000"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:background="@android:color/transparent" />
 
         <Button
@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:onClick="clickSignIn"
             android:textColor="#000000"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:background="@android:color/transparent" />
     </LinearLayout>
 
