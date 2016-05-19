@@ -1,8 +1,8 @@
 package snru.joonsri.peerawit.gamerun;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,9 +22,12 @@ public class Exercise extends AppCompatActivity {
     //Explicit
     private TextView textView;
     private RadioGroup radioGroup;
-    private RadioButton choice1RadioButton, choice2RadioButton, choice3RadioButton, choice4RadioButton;
-    private String[] questionString, choice1Strings, choice2Strings, choice3Strings, choice4Strings, answerStrings;
-    private int timesAnInt = 1, chockseAnInt, scoreAnInt = 0, amount;
+    private RadioButton choice1RadioButton, choice2RadioButton,
+            choice3RadioButton, choice4RadioButton;
+    private String[] questionStrings, choice1Strings,
+            choice2Strings, choice3Strings, choice4Strings, answerStrings;
+    private int timesAnInt = 1, chooseAnInt, scoreAnInt = 0, amount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,34 +39,33 @@ public class Exercise extends AppCompatActivity {
         SynQuestion synQuestion = new SynQuestion();
         synQuestion.execute();
 
-        redioController();
-    }//Main Method
+        radioController();
 
-    private void redioController() {
+    }   // Main Method
+
+    private void radioController() {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
 
                 switch (i) {
                     case R.id.radioButton6:
-                        chockseAnInt = 1;
+                        chooseAnInt = 1;
                         break;
                     case R.id.radioButton7:
-                        chockseAnInt = 2;
+                        chooseAnInt = 2;
                         break;
                     case R.id.radioButton8:
-                        chockseAnInt = 3;
+                        chooseAnInt = 3;
                         break;
                     case R.id.radioButton9:
-                        chockseAnInt = 4;
+                        chooseAnInt = 4;
                         break;
-
                 }
 
-            }//onChecked
+            }   // onChecked
         });
     }
-
 
     public void clickAnswer(View view) {
 
@@ -74,9 +76,11 @@ public class Exercise extends AppCompatActivity {
             MyAlert myAlert = new MyAlert();
             myAlert.myDialog(this, "Score" , "Score = " + Integer.toString(scoreAnInt));
         } else {
+
             Random random = new Random();
-            changView(random.nextInt(amount));
+            changeView(random.nextInt(amount));
             timesAnInt += 1;
+
         }
 
 
@@ -101,9 +105,7 @@ public class Exercise extends AppCompatActivity {
         }
 
         return myResult;
-    }//check คำตอบ
-
-
+    }
 
     public class SynQuestion extends AsyncTask<Void, Void, String> {
         @Override
@@ -121,9 +123,8 @@ public class Exercise extends AppCompatActivity {
                 return null;
             }
 
-
-           // return null;
-        }//doInBack
+            // return null;
+        }   // doInBack
 
         @Override
         protected void onPostExecute(String s) {
@@ -134,7 +135,7 @@ public class Exercise extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(s);
                 amount = jsonArray.length();
 
-                questionString = new String[jsonArray.length()];
+                questionStrings = new String[jsonArray.length()];
                 choice1Strings = new String[jsonArray.length()];
                 choice2Strings = new String[jsonArray.length()];
                 choice3Strings = new String[jsonArray.length()];
@@ -144,35 +145,38 @@ public class Exercise extends AppCompatActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
 
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    questionString[i] = jsonObject.getString("Question");
-                    choice1Strings[i] = jsonObject.getString("Choice");
-                    choice2Strings[i] = jsonObject.getString("Choice");
-                    choice3Strings[i] = jsonObject.getString("Choice");
-                    choice4Strings[i] = jsonObject.getString("Choice");
+                    questionStrings[i] = jsonObject.getString("Question");
+                    choice1Strings[i] = jsonObject.getString("Choice1");
+                    choice2Strings[i] = jsonObject.getString("Choice2");
+                    choice3Strings[i] = jsonObject.getString("Choice3");
+                    choice4Strings[i] = jsonObject.getString("Choice4");
                     answerStrings[i] = jsonObject.getString("Answer");
 
-                }//for
+                }   // for
 
                 Random random = new Random();
-                changView(random.nextInt(jsonArray.length()));
+
+                changeView(random.nextInt(jsonArray.length()));
+
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }//onPost
-    }//SynQuestion
+        }   // onPost
 
-    private void changView(int index) {
+    }   // SynQuestion Class
 
-        textView.setText(Integer.toString(timesAnInt) + questionString[index]);
+    private void changeView(int index) {
+
+        textView.setText(Integer.toString(timesAnInt) + questionStrings[index]);
         choice1RadioButton.setText(choice1Strings[index]);
         choice2RadioButton.setText(choice2Strings[index]);
         choice3RadioButton.setText(choice3Strings[index]);
         choice4RadioButton.setText(choice4Strings[index]);
 
 
-    }
+    }   // changeView
 
 
     private void bindWidget() {
@@ -185,4 +189,5 @@ public class Exercise extends AppCompatActivity {
         choice4RadioButton = (RadioButton) findViewById(R.id.radioButton9);
 
     }
-}//Main Class
+
+}   // Main Classsoft
