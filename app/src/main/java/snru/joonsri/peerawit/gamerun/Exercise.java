@@ -24,7 +24,7 @@ public class Exercise extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton choice1RadioButton, choice2RadioButton, choice3RadioButton, choice4RadioButton;
     private String[] questionString, choice1Strings, choice2Strings, choice3Strings, choice4Strings, answerStrings;
-    private int timesAnInt = 1, chockseAnInt;
+    private int timesAnInt = 1, chockseAnInt, scoreAnInt = 0, amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,13 @@ public class Exercise extends AppCompatActivity {
         if (!checkRadio()) {
             MyAlert myAlert = new MyAlert();
             myAlert.myDialog(this, "ยังไม่ได้เลือกคำตอบ", "โปรเลือกคำตอบ");
+        } else if (timesAnInt == 6) {
+            MyAlert myAlert = new MyAlert();
+            myAlert.myDialog(this, "Score" , "Score = " + Integer.toString(scoreAnInt));
+        } else {
+            Random random = new Random();
+            changView(random.nextInt(amount));
+            timesAnInt += 1;
         }
 
 
@@ -125,6 +132,7 @@ public class Exercise extends AppCompatActivity {
             try {
 
                 JSONArray jsonArray = new JSONArray(s);
+                amount = jsonArray.length();
 
                 questionString = new String[jsonArray.length()];
                 choice1Strings = new String[jsonArray.length()];
