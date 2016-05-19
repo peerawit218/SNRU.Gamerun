@@ -112,7 +112,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Double.parseDouble(lngStrings[i]));
                     mMap.addMarker(new MarkerOptions()
                             .position(latLng)
-                            .icon(BitmapDescriptorFactory.fromResource(findIcon(avataStrings[i]))));
+                            .icon(BitmapDescriptorFactory.fromResource(findIcon(avataStrings[i])))
+                            .title(nameStrings[i]));
 
 
                 }   // for
@@ -123,31 +124,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }   // onPost
 
-        private int findIcon(String avataString) {
+    }   // SynLocation Class
 
-            int intIcon = R.drawable.bird48;
-            switch (Integer.parseInt(avataString)) {
-                case 0:
-                    intIcon = R.drawable.bird48;
-                    break;
-                case 1:
-                    intIcon = R.drawable.doremon48;
-                    break;
-                case 2:
-                    intIcon = R.drawable.kon48;
-                    break;
-                case 3:
-                    intIcon = R.drawable.nobita48;
-                    break;
-                case 4:
-                    intIcon = R.drawable.rat48;
-                    break;
-            }
+    private int findIcon(String avataString) {
 
-            return intIcon;
+        int intIcon = R.drawable.bird48;
+
+        switch (Integer.parseInt(avataString)) {
+            case 0:
+                intIcon = R.drawable.bird48;
+                break;
+            case 1:
+                intIcon = R.drawable.doremon48;
+                break;
+            case 2:
+                intIcon = R.drawable.kon48;
+                break;
+            case 3:
+                intIcon = R.drawable.nobita48;
+                break;
+            case 4:
+                intIcon = R.drawable.rat48;
+                break;
         }
 
-    }   // SynLocation Class
+        return intIcon;
+    }
 
     @Override
     protected void onResume() {
