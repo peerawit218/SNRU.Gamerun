@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +14,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -21,6 +24,9 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -52,9 +58,96 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         criteria.setAltitudeRequired(false);
         criteria.setBearingRequired(false);
 
+        //Receive from Intent
         userStrings = getIntent().getStringArrayExtra("User");
 
     }   // Main Method
+
+    //Inner Class
+    public class SynLocation extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+
+                OkHttpClient okHttpClient = new OkHttpClient();
+                Request.Builder builder = new Request.Builder();
+                Request request = builder.url("http://swiftcodingthai.com/snru/get_user.php").build();
+                Response response = okHttpClient.newCall(request).execute();
+                return response.body().string();
+
+            } catch (Exception e) {
+                return null;
+            }
+
+            //return null;
+        }   // doInBack
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            mMap.clear();
+
+            try {
+
+                JSONArray jsonArray = new JSONArray(s);
+
+                String[] nameStrings = new String[jsonArray.length()];
+                String[] latStrings = new String[jsonArray.length()];
+                String[] lngStrings = new String[jsonArray.length()];
+                String[] avataStrings = new String[jsonArray.length()];
+
+                for (int i=0;i<jsonArray.length();i++) {
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    nameStrings[i] = jsonObject.getString("Name");
+                    latStrings[i] = jsonObject.getString("Lat");
+                    lngStrings[i] = jsonObject.getString("Lng");
+                    avataStrings[i] = jsonObject.getString("Avata");
+
+                    LatLng latLng = new LatLng(Double.parseDouble(latStrings[i]),
+                            Double.parseDouble(lngStrings[i]));
+                    mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .icon(BitmapDescriptorFactory.fromResource(findIcon(avataStrings[i]))));
+
+
+                }   // for
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }   // onPost
+
+        private int findIcon(String avataString) {
+
+            int intIcon = R.drawable.bird48;
+            switch (Integer.parseInt(avataString)) {
+                case 0:
+                    intIcon = R.drawable.bird48;
+                    break;
+                case 1:
+                    intIcon = R.drawable.doremon48;
+                    break;
+                case 2:
+                    intIcon = R.drawable.kon48;
+                    break;
+                case 3:
+                    intIcon = R.drawable.nobita48;
+                    break;
+                case 4:
+                    intIcon = R.drawable.rat48;
+                    break;
+            }
+
+            return intIcon;
+        }
+
+    }   // SynLocation Class
 
     @Override
     protected void onResume() {
@@ -150,6 +243,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         updateLocation();
 
+        createAllMarker();
+
+
 
 
         Handler handler = new Handler();
@@ -162,6 +258,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }   // myLoop
 
+    private void createAllMarker() {
+
+        SynLocation synLocation = new SynLocation();
+        synLocation.execute();
+
+    }   // createAllMarker
+
     private void updateLocation() {
 
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -169,7 +272,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .add("isAdd", "true")
                 .add("id", userStrings[0])
                 .add("Lat", Double.toString(myLatADouble))
-                .add("lng", Double.toString(myLngADouble))
+                .add("Lng", Double.toString(myLngADouble))
                 .build();
         Request.Builder builder = new Request.Builder();
         Request request = builder.url("http://swiftcodingthai.com/snru/edit_location.php").post(requestBody).build();
@@ -188,7 +291,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-    } //UpdateLocation
+    }   // updateLocation
 
 }   // Main Class
-
