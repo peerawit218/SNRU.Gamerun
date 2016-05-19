@@ -94,7 +94,7 @@ public class Exercise extends AppCompatActivity {
         }
 
         return myResult;
-    }
+    }//check คำตอบ
 
 
 
