@@ -1,6 +1,9 @@
 package snru.joonsri.peerawit.gamerun;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -34,16 +37,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Explicit
     private GoogleMap mMap;
-    private double snruLatADouble = 17.19126584,
-            snruLngADouble = 104.09153223;
+    private double snruLatADouble = 17.18978991,
+            snruLngADouble = 104.0897727;
     private LocationManager locationManager;
     private Criteria criteria;
     private double myLatADouble, myLngADouble;
     private boolean gpsABoolean, networkABoolean;
     private String[] userStrings;
-    private double[] buildLatDouble = {17.19409469, 17.19179882 , 17.18735049, 17.19073287};
-    private double[] buildLngDouble = {104.09071684,104.09518003, 104.09303427,104.08666134};
-    private int[] buildInt = {R.drawable.build1, R.drawable.build2, R.drawable.build3, R.drawable.build4};
+    private double[] buildLatDoubles = {17.1939512, 17.19157333, 17.18640751, 17.18970791};
+    private double[] buildLngDoubles = {104.0908885, 104.09533024, 104.09294844, 104.08822775};
+    private int[] buildInts = {R.drawable.build1, R.drawable.build2, R.drawable.build3, R.drawable.build4};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userStrings = getIntent().getStringArrayExtra("User");
 
     }   // Main Method
+
+    //นี่คือ เมทอด ที่หาระยะ ระหว่างจุด
+    private static double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+
+
+        return (dist);
+    }
+
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
 
     //Inner Class
     public class SynLocation extends AsyncTask<Void, Void, String> {
@@ -94,11 +117,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             mMap.clear();
 
-            for (int i = 0; i < buildLatDouble.length; i++) {
-                LatLng latLng = new LatLng(buildLatDouble[i], buildLngDouble[i]);
+            for (int i=0;i<buildLatDoubles.length;i++) {
+                LatLng latLng = new LatLng(buildLatDoubles[i], buildLngDoubles[i]);
                 mMap.addMarker(new MarkerOptions().position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(buildInt[i])));
+                        .icon(BitmapDescriptorFactory.fromResource(buildInts[i])));
             }
+
 
             try {
 
@@ -300,8 +324,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        //Check Distance
+        double myDistance = distance(myLatADouble, myLngADouble, buildLatDoubles[0], buildLngDoubles[0]);
+        Log.d("19May", "MyDistance" + myDistance);
 
+        if (myDistance < 50) {
+            showAlert();
+        }
 
     }   // updateLocation
+
+    private void showAlert() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.doremon48);
+        builder.setTitle("ด่านที่ 1 ");
+        builder.setMessage("คุณถึงด่านที่ 1 แล้ว");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                Intent intent = new Intent(MapsActivity.this, Exercise.class);
+                intent.putExtra("User", userStrings);
+                startActivity(intent);
+            }
+        });
+
+        builder.show();
+
+    }
 
 }   // Main Class
