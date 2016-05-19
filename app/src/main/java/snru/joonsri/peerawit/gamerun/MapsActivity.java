@@ -34,13 +34,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Explicit
     private GoogleMap mMap;
-    private double snruLatADouble = 17.189813,
-            snruLngADouble = 104.087387;
+    private double snruLatADouble = 17.19126584,
+            snruLngADouble = 104.09153223;
     private LocationManager locationManager;
     private Criteria criteria;
     private double myLatADouble, myLngADouble;
     private boolean gpsABoolean, networkABoolean;
     private String[] userStrings;
+    private double[] buildLatDouble = {17.19409469, 17.19179882 , 17.18735049, 17.19073287};
+    private double[] buildLngDouble = {104.09071684,104.09518003, 104.09303427,104.08666134};
+    private int[] buildInt = {R.drawable.build1, R.drawable.build2, R.drawable.build3, R.drawable.build4};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +93,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             super.onPostExecute(s);
 
             mMap.clear();
+
+            for (int i = 0; i < buildLatDouble.length; i++) {
+                LatLng latLng = new LatLng(buildLatDouble[i], buildLngDouble[i]);
+                mMap.addMarker(new MarkerOptions().position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(buildInt[i])));
+            }
 
             try {
 
